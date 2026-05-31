@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frame & Light — Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===================== MORANDI PALETTE ===================== */
+:root {
+  --sand:       #e8e0d5;
+  --sand-dark:  #d4c9b8;
+  --cream:      #f5f1eb;
+  --rose:       #c4a99a;
+  --rose-deep:  #9e7b6e;
+  --fog-blue:   #8ea3ad;
+  --fog-green:  #8fa89a;
+  --sage:       #6b8070;
+  --charcoal:   #2e2e2a;
+  --ink:        #1a1916;
+  --mist:       #b8c0b4;
+  --accent:     #c4562a;   /* warm terracotta — contrast punch */
+  --accent-2:   #2a4a5a;   /* deep teal — second contrast */
+  --white:      #faf8f5;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  font-weight: 300;
+  line-height: 1.7;
+  cursor: none;
+}
+
+/* ===================== CUSTOM CURSOR ===================== */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid var(--rose);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: all 0.25s ease;
+}
+body:hover .cursor-ring { opacity: 1; }
+
+/* ===================== NAV ===================== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  background: rgba(245,241,235,0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--sand-dark);
+  transition: padding 0.3s;
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sage);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 1px; background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+/* ===================== HERO / COVER ===================== */
+.hero {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.hero-cover {
+  position: absolute; inset: 0;
+  background: var(--sand);
+  display: flex;
+}
+/* cover image slot — replace background-image with your photo */
+.hero-img-slot {
+  position: absolute; inset: 0;
+  background-image: url('cover.jpg');   /* ← 替换为你的封面照片 */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.72;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(245,241,235,0.3) 60%,
+    rgba(245,241,235,0.92) 100%
+  );
+}
+/* decorative grid lines */
+.hero-grid-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(196,169,154,0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(196,169,154,0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 48px 64px;
+  max-width: 760px;
+}
+.hero-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 32px; height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 7vw, 80px);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--accent-2);
+}
+.hero-sub {
+  font-size: 13px;
+  color: var(--sage);
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+  max-width: 420px;
+}
+.hero-stats {
+  display: flex; gap: 32px;
+}
+.stat-item {}
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--charcoal);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-top: 4px;
+}
+.hero-scroll {
+  position: absolute;
+  right: 48px; bottom: 40px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  font-size: 9px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--mist);
+}
+.scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mist), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.2); }
+}
+
+/* ===================== SECTION LAYOUT ===================== */
+section { padding: 80px 48px; }
+.section-header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  border-bottom: 0.5px solid var(--sand-dark);
+  padding-bottom: 16px;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 300;
+  color: var(--ink);
+}
+.section-title em { font-style: italic; color: var(--rose-deep); }
+.section-tag {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--mist);
+}
+.view-all {
+  font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--accent);
+  padding-bottom: 1px;
+  transition: opacity 0.2s;
+}
+.view-all:hover { opacity: 0.6; }
+
+/* ===================== LATEST UPLOADS ===================== */
+.latest-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 3px;
+}
+.media-card {
+  position: relative; overflow: hidden;
+  background: var(--sand);
+  cursor: pointer;
+}
+.media-card:first-child {
+  grid-row: 1 / 3;
+  aspect-ratio: 3/4;
+}
+.media-card:not(:first-child) { aspect-ratio: 4/3; }
+
+/* image / video slot */
+.media-slot {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.media-card:hover .media-slot { transform: scale(1.04); }
+
+/* placeholder when no image loaded */
+.media-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sand);
+  color: var(--mist); font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.media-info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 32px 16px 16px;
+  background: linear-gradient(to top, rgba(26,25,22,0.6), transparent);
+  transform: translateY(4px);
+  transition: transform 0.3s;
+}
+.media-card:hover .media-info { transform: translateY(0); }
+.media-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 400;
+  color: var(--white); line-height: 1.3;
+}
+.media-meta {
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,241,235,0.6);
+  margin-top: 4px;
+}
+.media-type-badge {
+  position: absolute; top: 12px; left: 12px;
+  font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: var(--accent);
+  color: var(--white);
+  border-radius: 1px;
+}
+.video-badge { background: var(--accent-2); }
+
+/* video play button overlay */
+.play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  background: rgba(245,241,235,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.play-btn svg { width: 16px; height: 16px; fill: var(--accent); margin-left: 3px; }
+.media-card.is-video:hover .play-btn { opacity: 1; }
+
+/* ===================== FILTER BAR ===================== */
+.filter-section {
+  background: var(--sand);
+  padding: 32px 48px;
+  border-top: 0.5px solid var(--sand-dark);
+  border-bottom: 0.5px solid var(--sand-dark);
+}
+.filter-row {
+  display: flex; align-items: center;
+  gap: 0; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.filter-row:last-child { margin-bottom: 0; }
+.filter-label {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mist);
+  width: 80px; flex-shrink: 0;
+}
+.filter-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.ftag {
+  font-size: 11px; letter-spacing: 0.1em;
+  padding: 5px 14px;
+  border: 0.5px solid var(--sand-dark);
+  background: var(--cream);
+  color: var(--sage);
+  border-radius: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.ftag:hover { border-color: var(--rose); color: var(--rose-deep); }
+.ftag.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+.ftag.active-2 {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: var(--white);
+}
+
+/* ===================== PORTFOLIO GRID ===================== */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+}
+.portfolio-card {
+  position: relative; overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--sand);
+  cursor: pointer;
+}
+.portfolio-card img, .portfolio-card video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.portfolio-card:hover img,
+.portfolio-card:hover video { transform: scale(1.05); }
+.portfolio-overlay {
+  position: absolute; inset: 0;
+  background: rgba(26,25,22,0);
+  transition: background 0.35s;
+  display: flex; align-items: flex-end;
+}
+.portfolio-card:hover .portfolio-overlay { background: rgba(26,25,22,0.42); }
+.portfolio-info {
+  padding: 14px;
+  opacity: 0; transform: translateY(6px);
+  transition: all 0.3s;
+}
+.portfolio-card:hover .portfolio-info { opacity: 1; transform: translateY(0); }
+.p-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; color: var(--white); font-weight: 300;
+}
+.p-meta { font-size: 10px; color: rgba(245,241,235,0.55); letter-spacing: 0.1em; margin-top: 2px; }
+
+/* ===================== LIGHTBOX ===================== */
+.lightbox {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 500;
+  background: rgba(26,25,22,0.92);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lb-close {
+  position: absolute; top: 24px; right: 32px;
+  font-size: 28px; color: var(--sand);
+  cursor: pointer; line-height: 1;
+  background: none; border: none;
+  font-family: 'Jost', sans-serif;
+}
+.lb-close:hover { color: var(--accent); }
+.lb-media {
+  max-width: 88vw; max-height: 88vh;
+  object-fit: contain;
+  border-radius: 1px;
+}
+.lb-caption {
+  position: absolute; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.lb-caption h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300;
+  color: var(--sand);
+}
+.lb-caption p {
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--mist); margin-top: 4px;
+}
+
+/* ===================== ABOUT / INTRO STRIP ===================== */
+.intro-strip {
+  background: var(--accent-2);
+  padding: 64px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.intro-text {}
+.intro-eyebrow {
+  font-size: 10px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--fog-blue);
+  margin-bottom: 16px;
+}
+.intro-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300;
+  color: var(--cream); line-height: 1.2;
+  margin-bottom: 20px;
+}
+.intro-body {
+  font-size: 14px; color: rgba(245,241,235,0.7);
+  line-height: 1.8; margin-bottom: 24px;
+}
+.intro-link {
+  font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rose);
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--rose);
+  padding-bottom: 2px;
+}
+.intro-photo {
+  aspect-ratio: 3/4;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+.intro-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.intro-photo-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: rgba(245,241,235,0.2);
+}
+
+/* ===================== COLLECTIONS (by time/place/type) ===================== */
+.collections-tabs {
+  display: flex; gap: 0;
+  border-bottom: 0.5px solid var(--sand-dark);
+  margin-bottom: 36px;
+}
+.ctab {
+  font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  color: var(--mist);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -0.5px;
+  transition: all 0.2s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'Jost', sans-serif;
+}
+.ctab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.ctab:hover:not(.active) { color: var(--charcoal); }
+
+.collection-view { display: none; }
+.collection-view.active { display: block; }
+
+.collection-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.coll-item {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.coll-item:hover { transform: translateY(-3px); }
+.coll-thumb {
+  aspect-ratio: 1;
+  background: var(--sand);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+.coll-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.coll-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: var(--sand-dark);
+}
+.coll-count {
+  position: absolute; bottom: 6px; right: 6px;
+  font-size: 9px; letter-spacing: 0.1em;
+  background: var(--cream); color: var(--sage);
+  padding: 2px 7px; border-radius: 1px;
+}
+.coll-name {
+  font-size: 13px; color: var(--charcoal); font-weight: 400;
+}
+.coll-sub {
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--mist); margin-top: 2px;
+}
+
+/* ===================== FOOTER ===================== */
+footer {
+  background: var(--ink);
+  padding: 56px 48px 40px;
+}
+.footer-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 40px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  margin-bottom: 32px;
+}
+.footer-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 300;
+  color: var(--sand);
+}
+.footer-brand span { color: var(--accent); }
+.footer-tagline {
+  font-size: 12px; color: rgba(232,224,213,0.35);
+  margin-top: 6px; letter-spacing: 0.06em;
+}
+.footer-links {
+  display: flex; gap: 48px;
+}
+.footer-col h4 {
+  font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--rose);
+  margin-bottom: 14px;
+}
+.footer-col a {
+  display: block; font-size: 13px;
+  color: rgba(232,224,213,0.45);
+  text-decoration: none; margin-bottom: 8px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--sand); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy {
+  font-size: 11px; color: rgba(232,224,213,0.2);
+  letter-spacing: 0.06em;
+}
+.footer-socials { display: flex; gap: 20px; }
+.social-link {
+  font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(232,224,213,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.social-link:hover { color: var(--rose); }
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards;
+}
+.hero-eyebrow { animation-delay: 0.1s; }
+.hero-title   { animation-delay: 0.25s; }
+.hero-sub     { animation-delay: 0.4s; }
+.hero-stats   { animation-delay: 0.55s; }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 56px 24px; }
+  .filter-section { padding: 24px; }
+  .hero-content { padding: 0 24px 48px; }
+  .hero-scroll { display: none; }
+  .latest-grid { grid-template-columns: 1fr; }
+  .latest-grid .media-card:first-child { grid-row: auto; aspect-ratio: 16/9; }
+  .portfolio-grid { grid-template-columns: 1fr 1fr; }
+  .collection-list { grid-template-columns: 1fr 1fr; }
+  .intro-strip { grid-template-columns: 1fr; gap: 32px; }
+  .intro-photo { display: none; }
+  .footer-links { display: none; }
+  .footer-top { flex-direction: column; gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ========== NAV ========== -->
+<nav>
+  <a class="nav-logo" href="#">Frame<span>&</span>Light</a>
+  <ul class="nav-links">
+    <li><a href="#latest">最新</a></li>
+    <li><a href="#portfolio">作品集</a></li>
+    <li><a href="#collections">分类</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- ========== HERO COVER ========== -->
+<div class="hero">
+  <div class="hero-cover">
+    <!-- ★ 替换 cover.jpg 为你的封面图路径 -->
+    <div class="hero-img-slot" style="background-image: url('cover.jpg');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grid-lines"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow fade-up">摄影 · Photography</div>
+    <h1 class="hero-title fade-up">
+      光影<em>之间</em><br>Between Light
+    </h1>
+    <p class="hero-sub fade-up">记录每一个值得被看见的瞬间</p>
+    <div class="hero-stats fade-up">
+      <div class="stat-item">
+        <div class="stat-num">340</div>
+        <div class="stat-label">Photos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">28</div>
+        <div class="stat-label">Videos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Series</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<!-- ========== LATEST UPLOADS ========== -->
+<section id="latest">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Recently Added</div>
+      <h2 class="section-title">最新<em>上传</em></h2>
+    </div>
+    <a class="view-all" href="#portfolio">查看全部</a>
+  </div>
+
+  <div class="latest-grid">
+    <!-- Card 1: Large feature -->
+    <div class="media-card" onclick="openLightbox('img','images/latest-1.jpg','晨光·京都','2025年11月 · 日本 · 风景')">
+      <div class="media-placeholder">
+        <!-- ★ 替换 src 为你的照片 -->
+        <img class="media-slot" src="images/latest-1.jpg" alt="晨光京都"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="media-placeholder" style="display:none;height:100%;flex-direction:column;gap:8px">
+          <span style="font-size:36px;opacity:0.15">⬜</span>
+          <span style="font-size:11px;letter-spacing:0.1em">晨光 · 京都</span>
+        </div>
+      </div>
+      <div class="media-type-badge">Photo</div>
+      <div class="media-info">
+        <div class="media-title">晨光 · 京都</div>
+        <div class="media-meta">2025.11 · 日本 · 风景</div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="media-card is-video" onclick="openLightbox('video','videos/latest-2.mp4','雨中上海','2025年10月 · 上海 · 街头')">
+      <div class="media-placeholder">
+        <img class="media-slot" src="images/latest-2-thumb.jpg" alt="雨中上海"
+          onerror="this.style.display='none'">
+        <div class="media-placeholder" style="height:100%;flex-direction:column;gap:8px">
+          <span style="font-size:28px;opacity:0.15">▶</span>
+          <span style="font-size:11px;letter-spacing:0.1em">雨中 · 上海</span>
+        </div>
+      </div>
+      <div class="media-type-badge video-badge">Video</div>
+      <div class="play-btn">
+        <svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"/></svg>
+      </div>
+      <div class="media-info">
+        <div class="media-title">雨中 · 上海</div>
+        <div class="media-meta">2025.10 · 中国 · 街头</div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="media-card" onclick="openLightbox('img','images/latest-3.jpg','黄昏渔港','2025年09月 · 厦门 · 人文')">
+      <div class="media-placeholder">
+        <img class="media-slot" src="images/latest-3.jpg" alt="黄昏渔港"
+          onerror="this.style.display='none'">
+        <div class="media-placeholder" style="height:100%;flex-direction:column;gap:8px">
+          <span style="font-size:28px;opacity:0.15">⬜</span>
+          <span style="font-size:11px;letter-spacing:0.1em">黄昏 · 渔港</span>
+        </div>
+      </div>
+      <div class="media-type-badge">Photo</div>
+      <div class="media-info">
+        <div class="media-title">黄昏 · 渔港</div>
+        <div class="media-meta">2025.09 · 中国 · 人文</div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="media-card" onclick="openLightbox('img','images/latest-4.jpg','雪山晨曦','2025年08月 · 西藏 · 风景')">
+      <div class="media-placeholder">
+        <img class="media-slot" src="images/latest-4.jpg" alt="雪山晨曦"
+          onerror="this.style.display='none'">
+        <div class="media-placeholder" style="height:100%;flex-direction:column;gap:8px">
+          <span style="font-size:28px;opacity:0.15">⬜</span>
+          <span style="font-size:11px;letter-spacing:0.1em">雪山 · 晨曦</span>
+        </div>
+      </div>
+      <div class="media-type-badge">Photo</div>
+      <div class="media-info">
+        <div class="media-title">雪山 · 晨曦</div>
+        <div class="media-meta">2025.08 · 西藏 · 风景</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FILTER BAR ========== -->
+<div class="filter-section">
+  <div class="filter-row">
+    <div class="filter-label">类型</div>
+    <div class="filter-tags" id="type-filter">
+      <div class="ftag active" data-filter="type" data-val="all">全部</div>
+      <div class="ftag" data-filter="type" data-val="landscape">风景</div>
+      <div class="ftag" data-filter="type" data-val="street">街头</div>
+      <div class="ftag" data-filter="type" data-val="portrait">人像</div>
+      <div class="ftag" data-filter="type" data-val="architecture">建筑</div>
+      <div class="ftag" data-filter="type" data-val="documentary">人文</div>
+      <div class="ftag" data-filter="type" data-val="video">视频</div>
+    </div>
+  </div>
+  <div class="filter-row" style="margin-top:10px">
+    <div class="filter-label">年份</div>
+    <div class="filter-tags" id="year-filter">
+      <div class="ftag active-2" data-filter="year" data-val="all">全部</div>
+      <div class="ftag" data-filter="year" data-val="2025">2025</div>
+      <div class="ftag" data-filter="year" data-val="2024">2024</div>
+      <div class="ftag" data-filter="year" data-val="2023">2023</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PORTFOLIO GRID ========== -->
+<section id="portfolio">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">All Works</div>
+      <h2 class="section-title">作品<em>集</em></h2>
+    </div>
+  </div>
+
+  <div class="portfolio-grid" id="portfolio-grid">
+    <!-- ★ 每个 portfolio-card 里替换 img src 为你的照片路径 -->
+    <!-- 添加 data-type="landscape" data-year="2025" 用于筛选 -->
+
+    <div class="portfolio-card" data-type="landscape" data-year="2025"
+      onclick="openLightbox('img','images/p1.jpg','晨光·京都','2025 · 日本 · 风景')">
+      <img src="images/p1.jpg" alt="晨光京都"
+        onerror="this.src='';this.style.display='none'">
+      <div style="width:100%;height:100%;background:var(--sand);display:flex;align-items:center;justify-content:center;color:var(--sand-dark);font-size:13px;letter-spacing:0.08em;">晨光 · 京都</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">晨光 · 京都</div>
+          <div class="p-meta">2025 · 日本 · 风景</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-card" data-type="street" data-year="2025"
+      onclick="openLightbox('img','images/p2.jpg','雨夜·上海','2025 · 中国 · 街头')">
+      <img src="images/p2.jpg" alt="雨夜上海"
+        onerror="this.src='';this.style.display='none'">
+      <div style="width:100%;height:100%;background:#d4ccc4;display:flex;align-items:center;justify-content:center;color:var(--sand-dark);font-size:13px;letter-spacing:0.08em;">雨夜 · 上海</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">雨夜 · 上海</div>
+          <div class="p-meta">2025 · 中国 · 街头</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-card" data-type="portrait" data-year="2024"
+      onclick="openLightbox('img','images/p3.jpg','晨曦·人像','2024 · 成都 · 人像')">
+      <div style="width:100%;height:100%;background:#cac4bc;display:flex;align-items:center;justify-content:center;color:var(--sand-dark);font-size:13px;letter-spacing:0.08em;">晨曦 · 人像</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">晨曦 · 人像</div>
+          <div class="p-meta">2024 · 成都 · 人像</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-card" data-type="landscape" data-year="2024"
+      onclick="openLightbox('img','images/p4.jpg','高原·西藏','2024 · 西藏 · 风景')">
+      <div style="width:100%;height:100%;background:#b8c4bc;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;letter-spacing:0.08em;">高原 · 西藏</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">高原 · 西藏</div>
+          <div class="p-meta">2024 · 西藏 · 风景</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-card" data-type="video" data-year="2025"
+      onclick="openLightbox('video','videos/p5.mp4','烟雨·苏州','2025 · 中国 · 视频')">
+      <div style="width:100%;height:100%;background:#c4b8c0;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;letter-spacing:0.08em;">烟雨 · 苏州 ▶</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">烟雨 · 苏州</div>
+          <div class="p-meta">2025 · 中国 · 视频</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-card" data-type="architecture" data-year="2023"
+      onclick="openLightbox('img','images/p6.jpg','光影·建筑','2023 · 北京 · 建筑')">
+      <div style="width:100%;height:100%;background:#b4b8c4;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;letter-spacing:0.08em;">光影 · 建筑</div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <div class="p-title">光影 · 建筑</div>
+          <div class="p-meta">2023 · 北京 · 建筑</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /portfolio-grid -->
+</section>
+
+<!-- ========== INTRO STRIP ========== -->
+<div class="intro-strip" id="about">
+  <div class="intro-text">
+    <div class="intro-eyebrow">About the Photographer</div>
+    <h2 class="intro-heading">用镜头<br>丈量世界</h2>
+    <p class="intro-body">
+      <!-- ★ 替换为你的个人介绍 -->
+      旅行摄影师，热爱用镜头记录光与影交错的瞬间。
+      过去数年走访亚洲、欧洲多个国家，专注于风景、街头与人文摄影。
+      相信每一张照片都是一扇窗，通向那个独一无二的时刻。
+    </p>
+    <a class="intro-link" href="mailto:your@email.com">联系我</a>
+  </div>
+  <div class="intro-photo">
+    <!-- ★ 替换 src 为你的个人照片 -->
+    <img src="images/about.jpg" alt="摄影师"
+      onerror="this.style.display='none'">
+    <div class="intro-photo-placeholder">Your Photo Here</div>
+  </div>
+</div>
+
+<!-- ========== COLLECTIONS ========== -->
+<section id="collections">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Browse By</div>
+      <h2 class="section-title">浏览<em>分类</em></h2>
+    </div>
+  </div>
+
+  <div class="collections-tabs">
+    <button class="ctab active" onclick="switchTab('time',this)">按时间</button>
+    <button class="ctab" onclick="switchTab('place',this)">按地点</button>
+    <button class="ctab" onclick="switchTab('type',this)">按类型</button>
+  </div>
+
+  <!-- Time Collections -->
+  <div class="collection-view active" id="col-time">
+    <div class="collection-list">
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:var(--sand);">2025</div>
+          <div class="coll-count">128 张</div>
+        </div>
+        <div class="coll-name">2025年</div>
+        <div class="coll-sub">Jan — Nov</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#d4ccc4;">2024</div>
+          <div class="coll-count">96 张</div>
+        </div>
+        <div class="coll-name">2024年</div>
+        <div class="coll-sub">Full Year</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#cac4bc;">2023</div>
+          <div class="coll-count">74 张</div>
+        </div>
+        <div class="coll-name">2023年</div>
+        <div class="coll-sub">Full Year</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#c0bab6;">2022</div>
+          <div class="coll-count">42 张</div>
+        </div>
+        <div class="coll-name">2022年</div>
+        <div class="coll-sub">Full Year</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Place Collections -->
+  <div class="collection-view" id="col-place">
+    <div class="collection-list">
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#c8c0b8;">🇯🇵</div>
+          <div class="coll-count">56 张</div>
+        </div>
+        <div class="coll-name">日本</div>
+        <div class="coll-sub">京都 · 东京 · 奈良</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#bcc4c0;">🇨🇳</div>
+          <div class="coll-count">142 张</div>
+        </div>
+        <div class="coll-name">中国</div>
+        <div class="coll-sub">上海 · 西藏 · 厦门</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#c4bcbc;">🇮🇸</div>
+          <div class="coll-count">38 张</div>
+        </div>
+        <div class="coll-name">冰岛</div>
+        <div class="coll-sub">雷克雅未克 · 瀑布</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#bcc0c4;">🇮🇹</div>
+          <div class="coll-count">64 张</div>
+        </div>
+        <div class="coll-name">意大利</div>
+        <div class="coll-sub">威尼斯 · 罗马 · 托斯卡纳</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Type Collections -->
+  <div class="collection-view" id="col-type">
+    <div class="collection-list">
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#b8c4bc;">🏔</div>
+          <div class="coll-count">98 张</div>
+        </div>
+        <div class="coll-name">风景</div>
+        <div class="coll-sub">Landscape</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#c4b8b8;">🏙</div>
+          <div class="coll-count">76 张</div>
+        </div>
+        <div class="coll-name">街头</div>
+        <div class="coll-sub">Street</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#c4bcb0;">👤</div>
+          <div class="coll-count">54 张</div>
+        </div>
+        <div class="coll-name">人像</div>
+        <div class="coll-sub">Portrait</div>
+      </div>
+      <div class="coll-item">
+        <div class="coll-thumb">
+          <div class="coll-thumb-placeholder" style="background:#b8b8c4;">🎬</div>
+          <div class="coll-count">28 条</div>
+        </div>
+        <div class="coll-name">视频</div>
+        <div class="coll-sub">Video</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIGHTBOX ========== -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <div id="lb-content"></div>
+  <div class="lb-caption">
+    <h3 id="lb-title"></h3>
+    <p id="lb-meta"></p>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">Frame<span>&</span>Light</div>
+      <!-- ★ 替换为你的名字 -->
+      <div class="footer-tagline">摄影作品集 · Photography Portfolio</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>导航</h4>
+        <a href="#latest">最新上传</a>
+        <a href="#portfolio">作品集</a>
+        <a href="#collections">分类浏览</a>
+        <a href="#about">关于</a>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <!-- ★ 替换为你的联系信息 -->
+        <a href="mailto:your@email.com">your@email.com</a>
+        <a href="#">合作洽谈</a>
+        <a href="#">版权声明</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Frame & Light · All rights reserved</div>
+    <div class="footer-socials">
+      <!-- ★ 替换为你的社交媒体链接 -->
+      <a class="social-link" href="#">Instagram</a>
+      <a class="social-link" href="#">500px</a>
+      <a class="social-link" href="#">微博</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- Cursor ---------- */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animate() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animate);
+})();
+
+/* ---------- Lightbox ---------- */
+function openLightbox(type, src, title, meta) {
+  const lb = document.getElementById('lightbox');
+  const content = document.getElementById('lb-content');
+  document.getElementById('lb-title').textContent = title;
+  document.getElementById('lb-meta').textContent = meta;
+  if (type === 'video') {
+    content.innerHTML = `<video class="lb-media" src="${src}" controls autoplay playsinline style="max-width:88vw;max-height:75vh;border-radius:1px;"></video>`;
+  } else {
+    content.innerHTML = `<img class="lb-media" src="${src}" alt="${title}" style="max-width:88vw;max-height:80vh;border-radius:1px;">`;
+  }
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lb-close')) return;
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('open');
+  document.getElementById('lb-content').innerHTML = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({target: document.getElementById('lightbox')}); });
+
+/* ---------- Filter Tags ---------- */
+document.querySelectorAll('.ftag').forEach(tag => {
+  tag.addEventListener('click', function() {
+    const filter = this.dataset.filter;
+    document.querySelectorAll(`.ftag[data-filter="${filter}"]`).forEach(t => t.classList.remove('active','active-2'));
+    this.classList.add(filter === 'year' ? 'active-2' : 'active');
+    applyFilters();
+  });
+});
+function applyFilters() {
+  const typeEl = document.querySelector('.ftag.active[data-filter="type"]');
+  const yearEl = document.querySelector('.ftag.active-2[data-filter="year"]');
+  const type = typeEl ? typeEl.dataset.val : 'all';
+  const year = yearEl ? yearEl.dataset.val : 'all';
+  document.querySelectorAll('.portfolio-card').forEach(card => {
+    const tMatch = type === 'all' || card.dataset.type === type;
+    const yMatch = year === 'all' || card.dataset.year === year;
+    card.style.display = (tMatch && yMatch) ? '' : 'none';
+  });
+}
+
+/* ---------- Collection Tabs ---------- */
+function switchTab(id, btn) {
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.collection-view').forEach(v => v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('col-' + id).classList.add('active');
+}
+
+/* ---------- Nav shrink on scroll ---------- */
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.padding = window.scrollY > 60 ? '12px 48px' : '20px 48px';
+});
+</script>
+</body>
+</html>
