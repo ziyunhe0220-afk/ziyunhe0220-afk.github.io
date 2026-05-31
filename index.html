@@ -4,8 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Frame & Light — Photography</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* 使用系统字体替代 Google Fonts，避免国内加载缓慢 */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Georgia'), local('STSong'), local('SimSun');
+}
+</style>
+<style>
+  /* 字体回退方案：衬线字体用系统字体，保持设计感 */
+</style>
 <style>
 /* ===================== MORANDI PALETTE ===================== */
 :root {
@@ -30,7 +40,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Jost', sans-serif;
+  font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
   background: var(--cream);
   color: var(--charcoal);
   font-weight: 300;
@@ -73,7 +83,7 @@ nav {
   transition: padding 0.3s;
 }
 .nav-logo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 20px;
   font-weight: 400;
   letter-spacing: 0.12em;
@@ -160,7 +170,7 @@ nav {
   background: var(--accent);
 }
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: clamp(44px, 7vw, 80px);
   font-weight: 300;
   line-height: 1.05;
@@ -183,7 +193,7 @@ nav {
 }
 .stat-item {}
 .stat-num {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 28px;
   font-weight: 400;
   color: var(--charcoal);
@@ -224,7 +234,7 @@ section { padding: 80px 48px; }
   padding-bottom: 16px;
 }
 .section-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 32px; font-weight: 300;
   color: var(--ink);
 }
@@ -288,7 +298,7 @@ section { padding: 80px 48px; }
 }
 .media-card:hover .media-info { transform: translateY(0); }
 .media-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 16px; font-weight: 400;
   color: var(--white); line-height: 1.3;
 }
@@ -403,7 +413,7 @@ section { padding: 80px 48px; }
 }
 .portfolio-card:hover .portfolio-info { opacity: 1; transform: translateY(0); }
 .p-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 15px; color: var(--white); font-weight: 300;
 }
 .p-meta { font-size: 10px; color: rgba(245,241,235,0.55); letter-spacing: 0.1em; margin-top: 2px; }
@@ -423,7 +433,7 @@ section { padding: 80px 48px; }
   font-size: 28px; color: var(--sand);
   cursor: pointer; line-height: 1;
   background: none; border: none;
-  font-family: 'Jost', sans-serif;
+  font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
 }
 .lb-close:hover { color: var(--accent); }
 .lb-media {
@@ -437,7 +447,7 @@ section { padding: 80px 48px; }
   text-align: center;
 }
 .lb-caption h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 18px; font-weight: 300;
   color: var(--sand);
 }
@@ -462,7 +472,7 @@ section { padding: 80px 48px; }
   margin-bottom: 16px;
 }
 .intro-heading {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 36px; font-weight: 300;
   color: var(--cream); line-height: 1.2;
   margin-bottom: 20px;
@@ -492,7 +502,7 @@ section { padding: 80px 48px; }
 .intro-photo-placeholder {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-style: italic; font-size: 14px;
   color: rgba(245,241,235,0.2);
 }
@@ -513,7 +523,7 @@ section { padding: 80px 48px; }
   margin-bottom: -0.5px;
   transition: all 0.2s;
   background: none; border-top: none; border-left: none; border-right: none;
-  font-family: 'Jost', sans-serif;
+  font-family: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
 }
 .ctab.active {
   color: var(--accent);
@@ -577,7 +587,7 @@ footer {
   margin-bottom: 32px;
 }
 .footer-brand {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Georgia', 'Palatino', 'Book Antiqua', 'STSong', serif;
   font-size: 24px; font-weight: 300;
   color: var(--sand);
 }
